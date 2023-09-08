@@ -11,6 +11,7 @@ __all__ = ['NirspecFlatModel', 'NirspecQuadFlatModel']
 
 
 def _migrate_missing_error_hdulist(hdulist):
+
     # Files produced with NirspecFlatModel and NirspecQuadFlatModel
     # prior to https://github.com/spacetelescope/stdatamodels/pull/183
     # have flat_table tables (stored in the FAST_VARIATION extension)
@@ -58,6 +59,8 @@ class NirspecFlatModel(ReferenceFileModel):
     schema_url = "http://stsci.edu/schemas/jwst_datamodel/nirspec_flat.schema"
 
     def __init__(self, init=None, **kwargs):
+        init = _migrate_fast_variation_table(init)
+
         super(NirspecFlatModel, self).__init__(init=init, **kwargs)
 
         if self.dq is not None or self.dq_def is not None:
@@ -98,6 +101,8 @@ class NirspecQuadFlatModel(ReferenceFileModel):
     schema_url = "http://stsci.edu/schemas/jwst_datamodel/nirspec_quad_flat.schema"
 
     def __init__(self, init=None, **kwargs):
+        init = _migrate_fast_variation_table(init)
+
         if isinstance(init, NirspecFlatModel):
             super(NirspecQuadFlatModel, self).__init__(init=None, **kwargs)
             self.update(init)
