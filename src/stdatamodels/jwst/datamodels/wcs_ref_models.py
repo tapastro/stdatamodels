@@ -242,6 +242,22 @@ class NIRCAMGrismModel(ReferenceFileModel):
             self.invdispy = invdispy
         if orders is not None:
             self.orders = orders
+        if self.is_old_style():
+            self.normalize_models()
+
+    def is_old_style(self):
+        if (len(self.displ) == 2 and len(self.dispx) == 2 and len(self.dispy) == 2
+            and len(self.invdispx) == 2 and len(self.invdispy) == 2 and len(self.invdispl) ==2):
+            return True
+        return False
+
+    def normalize_models(self):
+        self.displ = [[model] for model in self.displ]
+        self.dispx = [[model] for model in self.dispx]
+        self.dispy = [[model] for model in self.dispy]
+        self.invdispl = [[model] for model in self.invdispl]
+        self.invdispx = [[model] for model in self.invdispx]
+        self.invdispy = [[model] for model in self.invdispy]
 
     def populate_meta(self):
         self.meta.instrument.name = "NIRCAM"
